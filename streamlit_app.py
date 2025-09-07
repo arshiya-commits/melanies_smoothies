@@ -14,11 +14,6 @@ cnx=st.connection("snowflake")
 session=cnx.session()
 
 
-import requests
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
-st.text(smoothiefroot_response.json())
-#my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
-sf_df=st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
 
 
@@ -35,11 +30,23 @@ ingredients = st.multiselect(
     max_selections=5
 )
 
+
+import requests
+smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+#st.text(smoothiefroot_response.json())
+#my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
+sf_df=st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+
+
 # Show the selected ingredients
 if ingredients:
+     for fruit_chosen in ingredients:
+        st.subheader(fruit_chosen + ' Nutrition Information')
+        smoothie_froot_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + fruit_chosen)
+        sf_df = st.dataframe(data=smoothie_froot_response.json(), use_container_width=True)
     # Create a comma-separated string of ingredients, e.g., "Elderberries, Ximenia, Ziziphus Jujube"
     ingredients_string = ', '.join(ingredients)
-    st.write("You selected: " + ingredients_string)
+   # st.write("You selected: " + ingredients_string)
     
     # Prepare SQL statement for inserting the order
     my_insert_stmt = f"""
