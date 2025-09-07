@@ -4,7 +4,7 @@ from snowflake.snowpark.functions import col
 
 
 # Write directly to the app
-st.title("\U0001F379 Customize Your Smoothie! \U0001F379")
+st.title(" Customize Your Smoothie! ")
 st.write(
   "Choose the fruits you want in your Smoothie!."
 )
