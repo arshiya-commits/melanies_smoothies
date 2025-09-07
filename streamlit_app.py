@@ -108,8 +108,7 @@ import requests
 # Write directly to the app
 st.title("🥤 Customize Your Smoothie! 🥤")
 st.write(
-  """Choose the fruits you want in your Smoothie!.
-  """
+  "Choose the fruits you want in your Smoothie!."
 )
 
 cnx = st.connection("snowflake")
