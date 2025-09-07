@@ -1,4 +1,4 @@
-# Import python packages
+"""# Import python packages
 import streamlit as st
 from snowflake.snowpark.functions import col
 
@@ -92,4 +92,62 @@ if ingredients_list:
     # Submit button
     if st.button('Submit Order'):
         session.sql(my_insert_stmt).collect()
-        st.success(f"Your Smoothie is ordered!  {name_on_order}")
+        st.success(f"Your Smoothie is ordered!  {name_on_order}")"""
+
+# Import necessary packages
+import streamlit as st
+import pandas as pd
+import requests
+from snowflake.snowpark.functions import col
+
+# Title and description
+st.title("Customize Your Smoothie!")
+st.write("Choose the fruits you want in your Smoothie!")
+
+# Snowflake connection
+cnx = st.connection("snowflake")  # make sure Snowflake connection is configured in Streamlit Cloud
+session = cnx.session()
+
+# Input for name
+name_on_order = st.text_input("Name on Smoothie")
+if name_on_order:
+    st.write("The name on your Smoothie will be", name_on_order)
+
+# Fetch fruit options from Snowflake
+my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('SEARCH_ON'))
+pd_df = my_dataframe.to_pandas()
+
+# Multiselect for ingredients from Snowflake table
+ingredients_list = st.multiselect(
+    "Choose up to 5 ingredients:",
+    options=pd_df['FRUIT_NAME'],
+    max_selections=5
+)
+
+if ingredients_list:
+    # Prepare a string for SQL insert
+    ingredients_string = ', '.join(ingredients_list)
+    
+    # Show nutrition info for each selected fruit
+    for fruit_chosen in ingredients_list:
+        search_on = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
+        st.subheader(fruit_chosen + ' Nutrition Information')
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + search_on)
+        if fruityvice_response.status_code == 200:
+            fv_df = pd.DataFrame([fruityvice_response.json()])  # convert JSON to DataFrame
+            st.dataframe(fv_df, use_container_width=True)
+        else:
+            st.write(f"Could not fetch nutrition info for {fruit_chosen}")
+    
+    # Prepare SQL insert statement
+    my_insert_stmt = f"""
+        INSERT INTO smoothies.public.orders(ingredients, name_on_order)
+        VALUES ('{ingredients_string}', '{name_on_order}')
+    """
+    
+    # Submit order button
+    if st.button('Submit Order'):
+        session.sql(my_insert_stmt).collect()
+        st.success(f"Your Smoothie has been ordered, {name_on_order}!")
+
+
