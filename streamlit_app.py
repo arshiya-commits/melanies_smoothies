@@ -31,7 +31,7 @@ ingredients = st.multiselect(
 )
 
 # Show the selected ingredients
-'''if ingredients:
+if ingredients:
     # Create a comma-separated string of ingredients, e.g., "Elderberries, Ximenia, Ziziphus Jujube"
     ingredients_string = ', '.join(ingredients)
     st.write("You selected: " + ingredients_string)
@@ -46,14 +46,4 @@ ingredients = st.multiselect(
     if st.button('Submit Order'):
         session.sql(my_insert_stmt).collect()  # Actually insert order
         st.success(f"Your Smoothie is ordered!  {name_on_order}")
-        '''
-if ingredients:
-    ingredients_string = ', '.join(ingredients)
-    st.write("You selected: " + ingredients_string)
-    if st.button('Submit Order'):
-        session.sql(
-            "INSERT INTO smoothies.public.orders(ingredients, name_on_order) VALUES (?, ?)",
-            [ingredients_string, name_on_order]
-        ).collect()
-        st.success(f"Your Smoothie is ordered!  {name_on_order}")
-
+        
