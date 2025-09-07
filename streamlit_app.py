@@ -45,7 +45,7 @@ if ingredients:
         smoothie_froot_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + fruit_chosen)
         sf_df = st.dataframe(data=smoothie_froot_response.json(), use_container_width=True)
     # Create a comma-separated string of ingredients, e.g., "Elderberries, Ximenia, Ziziphus Jujube"
-       ingredients_string = ', '.join(ingredients)
+     ingredients_string = ', '.join(ingredients)
    # st.write("You selected: " + ingredients_string)
     
     # Prepare SQL statement for inserting the order
