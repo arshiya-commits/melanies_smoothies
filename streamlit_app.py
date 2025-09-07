@@ -6,8 +6,7 @@ from snowflake.snowpark.functions import col
 # Write directly to the app
 st.title("\U0001F379 Customize Your Smoothie! \U0001F379")
 st.write(
-  "Choose the fruits you want in your Smoothie!.
-  "
+  "Choose the fruits you want in your Smoothie!."
 )
 from snowflake.snowpark.functions import col
 cnx=st.connection("snowflake")
