@@ -49,7 +49,7 @@ if ingredients:
    # st.write("You selected: " + ingredients_string)
     
     # Prepare SQL statement for inserting the order
-    my_insert_stmt = f"""
+      my_insert_stmt = f"""
         insert into smoothies.public.orders(ingredients, name_on_order)
         values ('{ingredients_string}', '{name_on_order}')
     """
